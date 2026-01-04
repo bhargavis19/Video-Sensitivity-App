@@ -15,6 +15,7 @@ export default function Login() {
       });
 
       localStorage.setItem("token", res.data.data.token);
+      localStorage.setItem("user", JSON.stringify(res.data.data.user));
 
       alert("Login successful");
       navigate("/dashboard");
@@ -24,7 +25,14 @@ export default function Login() {
   };
 
   return (
-    <div className="card">
+    <div 
+      className="card"
+      style={{
+      maxWidth: "360px",
+      margin: "100px auto",
+      padding: "24px",
+    }}
+  >
       <h2>Login</h2>
 
       <input

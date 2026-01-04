@@ -9,80 +9,102 @@ export default function Dashboard() {
   const [selectedVideo, setSelectedVideo] = useState(null);
   const navigate = useNavigate();
 
+  const user = JSON.parse(localStorage.getItem("user"));
+  const role = user?.role;
+
+  /* 🔁 Fetch videos (polling for live updates) */
   useEffect(() => {
     fetchVideos();
+
+    const interval = setInterval(() => {
+      fetchVideos();
+    }, 3000); // refresh every 3 sec
+
+    return () => clearInterval(interval);
   }, []);
 
   const fetchVideos = async () => {
     try {
       const res = await api.get("/videos");
-      setVideos(res.data.data);
+      setVideos(res.data.data || []);
     } catch (err) {
       console.error("Failed to fetch videos");
     }
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    navigate("/");
-  };
-
-  const deleteVideo = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this video?")) return;
-
-    try {
-      await api.delete(`/videos/${id}`);
-      setVideos(videos.filter((v) => v._id !== id));
-    } catch (err) {
-      alert("Failed to delete video");
-    }
-  };
-
+  /* 🎨 Status color */
   const statusColor = (status) => {
     if (status === "ready" || status === "safe") return "green";
     if (status === "flagged") return "red";
     return "orange";
   };
 
+  /* 🚪 Logout */
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    navigate("/");
+  };
+
+  /* 🗑 Delete video */
+  const deleteVideo = async (id) => {
+    if (!window.confirm("Delete this video?")) return;
+
+    try {
+      await api.delete(`/videos/${id}`);
+      setVideos((prev) => prev.filter((v) => v._id !== id));
+
+      // stop player if deleted video was playing
+      if (selectedVideo === id) {
+        setSelectedVideo(null);
+      }
+    } catch (err) {
+      alert("Failed to delete video");
+    }
+  };
+
   return (
-    <div
-      className="card"
-      style={{
-        maxWidth: "700px",
-        margin: "40px auto",
-        padding: "24px",
-      }}
-    >
-      {/* Header Row */}
+    <div className="card" style={{ maxWidth: "700px", margin: "auto" }}>
+
+      {/* 🔝 HEADER */}
       <div
         style={{
           display: "flex",
-          alignItems: "center",
           justifyContent: "space-between",
-          gap: "12px",
-          marginBottom: "24px",
-          flexWrap: "wrap",
+          alignItems: "center",
+          marginBottom: "20px",
         }}
       >
-        <h2 style={{ margin: 0, whiteSpace: "nowrap" }}>My Videos</h2>
+        <h2 style={{ margin: 0 }}>My Videos</h2>
 
         <div style={{ display: "flex", gap: "10px" }}>
-          <button
-            style={{ background: "#2563eb" }}
-            onClick={() => navigate("/upload")}
-          >
-            Upload New Video
-          </button>
-
-          <button
-            style={{ background: "#e74c3c" }}
-            onClick={handleLogout}
-          >
-            Logout
-          </button>
+          {role !== "viewer" && (
+            <button onClick={() => navigate("/upload")}>
+               Upload
+            </button>
+          )}
+          <button onClick={handleLogout}> Logout</button>
         </div>
       </div>
 
+      {/* ✅ ADD READ-ONLY MESSAGE RIGHT HERE */}
+      {role === "viewer" && (
+        <div
+          style={{
+            background: "#f8f9fa",
+            border: "1px solid #ddd",
+            padding: "10px",
+            borderRadius: "6px",
+            marginBottom: "15px",
+            fontSize: "14px",
+            color: "#555",
+          }}
+        >
+          🔒 You have <strong>read-only access</strong>.  
+          Uploading and deleting videos is restricted.
+        </div>
+      )}
+
+      {/* 📂 VIDEO LIST */}
       {videos.length === 0 && <p>No videos uploaded yet.</p>}
 
       <ul style={{ listStyle: "none", padding: 0 }}>
@@ -90,55 +112,63 @@ export default function Dashboard() {
           <li
             key={video._id}
             style={{
-              marginBottom: "20px",
-              paddingBottom: "12px",
-              borderBottom: "1px solid #ddd",
+              border: "1px solid #ddd",
+              padding: "12px",
+              borderRadius: "8px",
+              marginBottom: "15px",
             }}
           >
             <strong>{video.originalName}</strong>
-            <br />
 
-            Status:{" "}
-            <span
-              style={{
-                color: statusColor(video.status),
-                fontWeight: "bold",
-              }}
-            >
-              {video.status.toUpperCase()}
-            </span>
+            <div style={{ marginTop: "5px" }}>
+              Status:{" "}
+              <span
+                style={{
+                  color: statusColor(video.status),
+                  fontWeight: "bold",
+                }}
+              >
+                {video.status.toUpperCase()}
+              </span>
+            </div>
 
             <ProgressBar value={video.progress} />
 
+            {/* ▶ PLAY + 🗑 DELETE */}
             <div
               style={{
-                marginTop: "10px",
                 display: "flex",
-                gap: "12px",
-                alignItems: "center",
+                gap: "10px",
+                marginTop: "8px",
               }}
             >
               {video.progress === 100 && (
                 <button
-                  style={{ flex: 1 }}
                   onClick={() => setSelectedVideo(video._id)}
+                  style={{ flex: 1 }}
                 >
                   ▶ Play
                 </button>
               )}
-
-              <button
-                style={{ flex: 1, background: "#c0392b" }}
-                onClick={() => deleteVideo(video._id)}
-              >
-                🗑 Delete
-              </button>
+              {role !== "viewer" && (
+                <button
+                  onClick={() => deleteVideo(video._id)}
+                  style={{
+                    background: "#c0392b",
+                    color: "white",
+                    flex: 1,
+                  }}
+                >
+                   Delete
+                </button>
+              )}
+              
             </div>
-
           </li>
         ))}
       </ul>
 
+      {/* 🎬 PLAYER */}
       {selectedVideo && (
         <>
           <h3>Now Playing</h3>

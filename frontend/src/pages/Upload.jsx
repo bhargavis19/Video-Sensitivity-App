@@ -31,7 +31,12 @@ export default function Upload() {
   };
 
   return (
-    <div className="card" style={{ textAlign: "center" }}>
+    <div className="card" style={{ 
+      textAlign: "center",
+      maxWidth: "360px",
+      margin: "100px auto",
+      padding: "24px",
+    }}>
       <h2>Upload Video</h2>
 
       <input type="file" accept="video/mp4" onChange={handleUpload} />
