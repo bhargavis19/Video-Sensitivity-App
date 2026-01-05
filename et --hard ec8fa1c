@@ -1,0 +1,18 @@
+[33meddf95d[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m Fix CORS and auth cookies
+[33m2674c60[m Fix CORS and auth cookies
+[33m361fff3[m Fix socket progress emission in video processing
+[33m94d3a1a[m Fix socket progress emission in video processing
+[33m92b31f0[m Fix socket progress emission in video processing
+[33mbd266bc[m Fix socket progress emission in video processing
+[33m45476e7[m Fix socket progress emission in video processing
+[33mf814e9f[m Fix socket progress emission in video processing
+[33mb737680[m Fix socket progress emission in video processing
+[33m7c10f09[m Fix socket progress emission in video processing
+[33m96a7c78[m Fix socket progress emission in video processing
+[33m5e52e38[m Fix CORS for Vercel frontend
+[33m08eb2b9[m Fix CORS for Vercel frontend
+[33m21581a3[m Fix CORS for Vercel frontend
+[33mf566262[m Fix CORS for Vercel frontend
+[33mec8fa1c[m Final UI fixes, RBAC polish, dashboard improvements
+[33m4db5c93[m Add README.md with project overview and instructions
+[33m13bb428[m Initial commit: video upload, processing, streaming app

@@ -63,7 +63,7 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="card" style={{ maxWidth: "700px", margin: "auto" }}>
+    <div className="card" style={{ maxWidth: "500px", margin: "auto" }}>
 
       {/* 🔝 HEADER */}
       <div
@@ -99,8 +99,8 @@ export default function Dashboard() {
             color: "#555",
           }}
         >
-          🔒 You have <strong>read-only access</strong>.  
-          Uploading and deleting videos is restricted.
+          You have <strong>read-only access</strong>.  
+          No uploading and deleting videos.
         </div>
       )}
 
