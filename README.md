@@ -2,7 +2,7 @@
 # 🎥 Video Upload, Sensitivity Processing & Streaming Application
 
 A full-stack application that allows users to upload videos, process them for content sensitivity, and stream them efficiently with real-time progress tracking.
-
+Video Walkthrough: https://drive.google.com/file/d/1zdpjsohY6IdGqaTe31aC0l71RRrSENrl/view?usp=sharing
 ---
 
 ## 🚀 Features
@@ -167,7 +167,8 @@ form-data → video (file)
 ---
 
 ### GET /api/videos
-List videos of logged-in user
+- List videos of logged-in user
++ List videos of logged-in user (role-aware)
 
 ---
 
